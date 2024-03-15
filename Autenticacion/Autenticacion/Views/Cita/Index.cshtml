@@ -1,0 +1,87 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model IEnumerable<Autenticacion.Models.Cita>
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Citas";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Sacar cita</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            @if (User.IsInRole("Administrador")){
+            <th>
+                @Html.DisplayNameFor(model => model.ClienteId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Servicio)
+            </th>
+                <th></th>
+            }
+            else
+            {
+                @foreach (var item in Model.Where(x => x.ClienteId == User.Identity.Name)) // Suponiendo que el ID del usuario está almacenado en la propiedad ClienteId
+                {
+                <tr>
+                    <td>
+                            @Html.DisplayFor(modelItem => item.ClienteId)
+                    </td>
+                    <td>
+                            @Html.DisplayFor(modelItem => item.Fecha)
+                    </td>
+                    <td>
+                            @Html.DisplayFor(modelItem => item.Estado)
+                    </td>
+                    <td>
+                            @Html.DisplayFor(modelItem => item.Servicio)
+                    </td>
+                    <td>
+                        <!-- Aquí puedes agregar cualquier acción adicional para este registro -->
+                    </td>
+                </tr>
+                }
+
+
+
+
+            }
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClienteId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fecha)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Servicio.ServicioId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CitaId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CitaId">Details</a> |
+             @if (User.IsInRole("Administrador"))
+                {
+                <a asp-action="Delete" asp-route-id="@item.CitaId">Delete</a>
+                 }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
